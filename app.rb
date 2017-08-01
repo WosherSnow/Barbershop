@@ -1,6 +1,20 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader'
+require 'sqlite3'
+
+configure do
+	@db = SQLite3::Database.new 'barbershop'
+	@db.execute 'CREATE TABLE Users (
+    id        INTEGER PRIMARY KEY,
+    usersname TEXT,
+    phone     TEXT,
+    datestamp TEXT,
+    barber    TEXT,
+    color     TEXT
+);'
+	
+end	
 
 
 get '/' do
