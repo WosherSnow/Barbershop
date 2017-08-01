@@ -20,14 +20,6 @@ get '/contacts' do
 end	
 
 post '/visit' do
-	require 'pony'
-
- 	Pony.mail({
-	:from => params[:name],
-	    :to => ('sizoff.val@yandex.ru', @inform)
-
-    
-   end
 
 	@username = params[:username]
 	@phone = params[:phone]
