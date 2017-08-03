@@ -4,16 +4,16 @@ require 'sinatra/reloader'
 require 'sqlite3'
 
 configure do
-	@db = SQLite3::Database.new 'barbershop'
-	@db.execute 'CREATE TABLE Users (
-    id        INTEGER PRIMARY KEY,
-    usersname TEXT,
-    phone     TEXT,
-    datestamp TEXT,
-    barber    TEXT,
-    color     TEXT
-);'
-	
+	db = get_db
+	db.execute 'CREATE TABLE IF NOT EXISTS 
+	Users 
+	(
+	    username  TEXT,
+	    phone     TEXT,
+	    datestamp TEXT,
+	    barber    TEXT,
+	    color     TEXT
+	);'
 end	
 
 
@@ -52,7 +52,25 @@ post '/visit' do
 		return erb :visit
 	end
 
-	inform ="OK, username is #{@username}, #{@phone}, #{@datetime}, #{@barber}, #{@color}"
+	db = get_db
+	db.execute 'insert into 
+		Users
+		(
+			username,
+			phone, 
+			datestamp,
+			barber,
+			color
+		)
+		values(?, ?, ?, ?, ?)', [@username, @phone, @datetime, @barber, @color]
 
-	erb inform
+	erb "OK, username is #{@username}, #{@phone}, #{@datetime}, #{@barber}, #{@color}"
 end
+
+get '/showusers' do
+  erb "Hello World"
+end
+
+def get_db
+	return SQLite3::Database.new 'barbershop.db'
+end	
